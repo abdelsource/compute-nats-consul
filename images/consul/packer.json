@@ -7,57 +7,64 @@
   "builders": [
     {
       "type": "googlecompute",
-      "account_file": "{{user `account_file`}}",
       "project_id": "{{user `project_id`}}",
-      "source_image": "debian-8-jessie-v20150818",
-      "zone": "us-central1-f",
-      "image_name": "consul-{{timestamp}}"
+      "source_image": "debian-9-stretch-v20180806",
+      "zone": "europe-north1-a",
+      "image_name": "consul-{{timestamp}}",
+      "ssh_username": "packer"
     }
   ],
   "provisioners": [
     {
       "type": "shell",
       "inline": [
-        "# Make a dir we need",
-        "mkdir -p /etc/consul.d"
+        "# Make directories we need",
+        "sudo mkdir -p /etc/consul.d",
+        "mkdir -p /tmp/files"
       ]
     }, 
     {
       "type": "file",
       "source": "consul.service",
-      "destination": "/etc/systemd/system/consul.service"
+      "destination": "/tmp/files/consul.service"
     },
     {
       "type": "file",
       "source": "consul_servers.service",
-      "destination": "/etc/systemd/system/consul_servers.service"
+      "destination": "/tmp/files/consul_servers.service"
     },
     {
       "type": "file",
       "source": "consul_servers.sh",
-      "destination": "/usr/local/bin/consul_servers.sh"
+      "destination": "/tmp/files/consul_servers.sh"
     },
     {
       "type": "file",
       "source": "dns-config.json",
-      "destination": "/etc/consul.d/dns-config.json"
+      "destination": "/tmp/files/dns-config.json"
     },
     {
       "type": "shell",
       "inline": [
         "#!/bin/bash",
-        "apt-get update -y",
-        "apt-get install -y unzip",
+        "sudo apt-get update -y",
+        "sudo apt-get install -y unzip",
 
         "# Download and install consul",
         "wget -O consul.zip {{user `consul_url`}}",
-        "unzip consul.zip -d /usr/local/bin/",
+        "sudo unzip consul.zip -d /usr/local/bin/",
 
-        "chmod +x /usr/local/bin/consul_servers.sh",
-    
-        "# Enable consul",
-        "systemctl enable consul_servers.service",
-        "systemctl enable consul.service"
+
+	"sudo cp /tmp/files/consul.service /etc/systemd/system",	
+	"sudo cp /tmp/files/consul_servers.service /etc/systemd/system",	
+	"sudo cp /tmp/files/consul_servers.sh /usr/local/bin",	
+	"sudo cp /tmp/files/dns-config.json /etc/consul.d",	
+	
+	"sudo chmod +x /usr/local/bin/consul_servers.sh",
+        
+	"# Enable consul",
+        "sudo systemctl enable consul_servers.service",
+        "sudo systemctl enable consul.service"
       ]
     }
   ]

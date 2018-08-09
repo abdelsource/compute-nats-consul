@@ -1,9 +1,0 @@
-[Unit]
-Description=consul_servers
-
-[Service]
-Type=oneshot
-ExecStart=/bin/sh -c "/usr/bin/consul_servers.sh > /etc/consul-servers"
-
-[Install]
-WantedBy=multi-user.target
