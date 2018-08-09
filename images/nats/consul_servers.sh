@@ -4,4 +4,3 @@ IFS=',' read -a servers <<< "$in"
 args=""
 for x in "${servers[@]}"; do args+="-retry-join=$x "; done
 echo CONSUL_SERVERS=\"-bootstrap-expect=${#servers[@]} ${args}\"
-
