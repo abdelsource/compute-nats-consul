@@ -58,7 +58,7 @@
       },
       {
         "type": "file",
-        "source": "dnsmaq.conf",
+        "source": "dnsmasq.conf",
         "destination": "/tmp/files/dnsmasq.conf"
       },
       {
@@ -71,17 +71,17 @@
       "inline": [
             "#! /bin/bash",
             "sudo apt-get update -y",
-            "sudo apt-get install -y unzip dnsutils dnsmasq",
+            "sudo apt-get install -y unzip dnsutils dnsmasq git",
 
             "# Get and install consul and consul-template",
             "wget -O consul.zip {{user `consul_url`}}",
 	    "wget -O consul-template.zip {{user `consul_template_url`}}",
             "sudo unzip consul.zip -d /usr/local/bin/",
-	    "unzip consul-template.zip -d /usr/local/bin/",
+	    "sudo unzip consul-template.zip -d /usr/local/bin/",
 
 	    "#Get and install GO and NATS Servers",
 	    "wget -O go.tar.gz {{user `go_url`}}",
-	    "sudo sudo tar -xzf go.tar.gz /usr/local",
+	    "sudo tar -C /usr/local -xzf go.tar.gz",
 	    "export PATH=$PATH:/usr/local/go/bin",
 	    "go get github.com/nats-io/gnatsd",
 	    
@@ -90,8 +90,8 @@
 	    "sudo cp /tmp/files/nats.json.tpl /etc/consul.d",	
 	    "sudo cp /tmp/files/nats.service /etc/systemd/system",	
 	    "sudo cp /tmp/files/nats-start.sh /usr/local/bin",	
-	    "sudo cp /tmp/files/dns-config.sh /etc/consuld.dns/dns-config.json",	
-	    "sudo cp /tmp/files/dnsmasq.conf /etc/dnsmasq.json",	
+	    "sudo cp /tmp/files/dns-config.json /etc/consul.d/dns-config.json",	
+	    "sudo cp /tmp/files/dnsmasq.conf /etc/dnsmasq.conf",	
 	    "sudo cp /tmp/files/hosts.consul.ctmpl.tpl /etc/hosts.consul.ctmpl.tpl",	
             
 	    "sudo chmod +x /usr/local/bin/consul_servers.sh",
