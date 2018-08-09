@@ -8,7 +8,7 @@ envsubst < "/etc/hosts.consul.ctmpl.tpl" > "/etc/hosts.consul.ctmpl"
 envsubst < "/etc/consul.d/nats.json.tpl" > "/etc/consul.d/nats.json"
 
 # Start consul
-/usr/local/bin/consul agent -data-dir /tmp/consul -config-dir /etc/consul.d $CONSUL_SERVER &
+/usr/local/bin/consul agent -data-dir /tmp/consul -config-dir /etc/consul.d $CONSUL_SERVERS &
 
 # Start consul-template
 /usr/local/bin/consul-template -template "/etc/hosts.consul.ctmpl:/etc/hosts.consul:systemctl reload dnsmasq" -retry 30s -max-stale 10s -wait 10s &

@@ -5,7 +5,7 @@ Requires=consul_servers.service
 
 [Service]
 EnvironmentFile=/etc/consul-servers
-ExecStart=/usr/local/binnats-start.sh
+ExecStart=/usr/local/bin/nats-start.sh
 LimitNOFILE=9999999
 
 [Install]
